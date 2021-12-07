@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OperationHardcode\LaravelNsq\Queue;
 
+use Amp\Success;
 use Nsq\Config\ClientConfig;
 use Nsq\Producer;
 use Psr\Log\LoggerInterface;
@@ -25,7 +26,7 @@ final class NsqProducer
 
     public function publish(string $queue, string $body, ?int $delay = null): void
     {
-        wait($this->producer($queue)?->publish($queue, $body, $delay));
+        wait($this->producer($queue)?->publish($queue, $body, $delay) ?: new Success());
     }
 
     private function producer(string $queue): ?Producer
