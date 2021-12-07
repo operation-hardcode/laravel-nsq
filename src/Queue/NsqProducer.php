@@ -31,7 +31,7 @@ final class NsqProducer
 
     private function producer(string $queue): ?Producer
     {
-        if (!isset($this->producers[$queue])) {
+        if (!isset($this->producers[$queue]) || $this->producers[$queue]->get() === null) {
             $producer = new Producer($this->address, $this->clientConfig, $this->logger);
 
             wait($producer->connect());
