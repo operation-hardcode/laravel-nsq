@@ -25,19 +25,19 @@ final class NsqProducer
 
     public function publish(string $queue, string $body, ?int $delay = null): void
     {
-        wait($this->producer($queue)->publish($queue, $body, $delay));
+        wait($this->producer($queue)?->publish($queue, $body, $delay));
     }
 
-    private function producer(string $queue): Producer
+    private function producer(string $queue): ?Producer
     {
         if (!isset($this->producers[$queue])) {
             $producer = new Producer($this->address, $this->clientConfig, $this->logger);
 
             wait($producer->connect());
 
-            $this->producers[$queue] = $producer;
+            $this->producers[$queue] = \WeakReference::create($producer);
         }
 
-        return $this->producers[$queue];
+        return $this->producers[$queue]->get();
     }
 }

@@ -62,7 +62,7 @@ final class NsqConsumer
         }
 
         if (!isset($this->consumers[$queue])) {
-            $this->consumers[$queue] = $this->createConsumer($queue);
+            $this->consumers[$queue] = \WeakReference::create($this->createConsumer($queue));
         }
 
         wait(delay(500));
